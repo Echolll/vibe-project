@@ -24,29 +24,3 @@
 | Backend #2 | @username |
 | Frontend #1 | @username |
 | Frontend #2 | @username |
-
-## 📦 Установка и запуск
-
-### Требования
-- Python 3.10 или выше
-- Git
-
-### Инструкция
-```bash
-# Клонировать репозиторий
-git clone https://github.com/yourusername/vibe-project.git
-cd vibe-project
-
-# Создать виртуальное окружение
-python -m venv venv
-# Активировать:
-# на Windows:
-venv\Scripts\activate
-# на Mac/Linux:
-source venv/bin/activate
-
-# Установить зависимости
-pip install -r requirements.txt
-
-# Запустить сервер
-uvicorn app.main:app --reload
