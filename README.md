@@ -13,14 +13,14 @@
 
 ## 🛠 Стек технологий
 - **Python 3.10+** / **FastAPI** / **SQLite** / **SQLAlchemy**
-- **HTML** / **CSS** / **Bootstrap** / **Jinja2**
+- **HTML** / **CSS** / **Java**
 - **Git** / **Pytest** / **GitHub Actions**
 
 ## 👥 Команда
 | Роль | Участник |
 |------|----------|
-| TeamLead / DevOps | @Echolll |
-| Backend #1 | @KateB789 |
-| Backend #2 | @Vera98765 |
-| Frontend #1 | @milanakokovina-stack |
-| Frontend #2 | @nargizkastar-cpu |
+| TeamLead / DevOps | [Echolll](https://github.com/Echolll) | 
+| Backend #1 | [KateB78](https://github.com/KateB789) |
+| Backend #2 | [Vera98765](https://github.com/Vera98765) | 
+| Frontend #1 | [milanakokovina-stack](https://github.com/milanakokovina-stack) |
+| Frontend #2 | [nargizkastar-cpu](https://github.com/nargizkastar-cpu) |
