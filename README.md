@@ -19,8 +19,8 @@
 ## 👥 Команда
 | Роль | Участник |
 |------|----------|
-| TeamLead / DevOps | @username |
-| Backend #1 | @username |
-| Backend #2 | @username |
-| Frontend #1 | @username |
-| Frontend #2 | @username |
+| TeamLead / DevOps | @Echolll |
+| Backend #1 | @KateB789 |
+| Backend #2 | @Vera98765 |
+| Frontend #1 | @milanakokovina-stack |
+| Frontend #2 | @nargizkastar-cpu |
