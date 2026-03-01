@@ -12,8 +12,8 @@
 - [ ] Чат участников
 
 ## 🛠 Стек технологий
-- **Python 3.10+** / **FastAPI** / **SQLite** / **SQLAlchemy**
-- **HTML** / **CSS** / **Java**
+- **Python** / **FastAPI** / **SQLite** / **SQLAlchemy**
+- **HTML** / **CSS** / **JavaScirpt(+React)**
 - **Git** / **Pytest** / **GitHub Actions**
 
 ## 👥 Команда
