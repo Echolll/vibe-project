@@ -14,7 +14,7 @@
 ## 🛠 Стек технологий
 - **Python** / **FastAPI** / **SQLite** / **SQLAlchemy**
 - **HTML** / **CSS** / **JavaScirpt(+React)**
-- **Git** / **Pytest** / **GitHub Actions**
+- **Git** / **Pytest** / **GitHub Actions** / **Docker**
 
 ## 👥 Команда
 | Роль | Участник |
