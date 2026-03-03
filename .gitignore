@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+
+# База данных
+*.db
+*.sqlite
+*.sqlite3
+
+# React
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
