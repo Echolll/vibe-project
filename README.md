@@ -12,15 +12,15 @@
 - [ ] Чат участников
 
 ## 🛠 Стек технологий
-- **Python 3.10+** / **FastAPI** / **SQLite** / **SQLAlchemy**
-- **HTML** / **CSS** / **Bootstrap** / **Jinja2**
-- **Git** / **Pytest** / **GitHub Actions**
+- **Python** / **FastAPI** / **SQLite** / **SQLAlchemy**
+- **HTML** / **CSS** / **JavaScirpt(+React)**
+- **Git** / **Pytest** / **GitHub Actions** / **Docker**
 
 ## 👥 Команда
 | Роль | Участник |
 |------|----------|
-| TeamLead / DevOps | @username |
-| Backend #1 | @username |
-| Backend #2 | @username |
-| Frontend #1 | @username |
-| Frontend #2 | @username |
+| TeamLead / DevOps | [Echolll](https://github.com/Echolll) | 
+| Backend #1 | [KateB78](https://github.com/KateB789) |
+| Backend #2 | [Vera98765](https://github.com/Vera98765) | 
+| Frontend #1 | [milanakokovina-stack](https://github.com/milanakokovina-stack) |
+| Frontend #2 | [nargizkastar-cpu](https://github.com/nargizkastar-cpu) |
