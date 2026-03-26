@@ -12,6 +12,5 @@ def get_events(db: Session = Depends(get_db)):
                       Events.status).all()
     return events
 
-#Error 500: When initializing mapper Mapper[Users(users)], expression 'Review.from_user_id' failed to locate a name ("name 'Review' is not defined")
-#If this is a class name, consider adding this relationship() to the <class 'backend.app.database.user.Users'> class after both dependent classes have been defined.
+
 

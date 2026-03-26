@@ -21,5 +21,5 @@ class Users(Base):
 
     created_events = relationship('Events', back_populates = 'creator', foreign_keys = 'Events.creator_id')
     participant = relationship('Participants', back_populates = 'user', foreign_keys = 'Participants.user_id')
-    sent_reviews = relationship('Review', back_populates = 'from_user', foreign_keys = 'Review.from_user_id')
-    received_reviews = relationship('Review', back_populates = 'to_user', foreign_keys = 'Review.to_user_id')
+    sent_reviews = relationship('Reviews', back_populates = 'from_user', foreign_keys = 'Reviews.from_user_id')
+    received_reviews = relationship('Reviews', back_populates = 'to_user', foreign_keys = 'Reviews.to_user_id')
