@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
+
 DATABASE_URL = 'sqlite:///./database_vibe.db'
 
 engine = create_engine(
