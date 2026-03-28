@@ -14,8 +14,6 @@ class Users(Base):
     avatar = Column(String)
     bio = Column(String)
     rating = Column(Float, default=0.0)
-    events_created = Column(Integer, default=0)
-    events_joined = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now())
 
