@@ -14,9 +14,7 @@ DbSession = Annotated[Session, Depends(get_db)]
 
 @router.get("/", response_model = List[EventShort])
 def get_events(db: DbSession):
-    events = db.query(Events.title,
-                      Events.date,
-                      Events.status).all()
+    events = db.query(Events).all()
     return events
 
 @router.get("/{event_id}", response_model =  EventFull)
@@ -35,21 +33,12 @@ def get_event(db: DbSession,
 def create_event(
     db: DbSession,
     event_in: EventCreate ):
-    new_event = Events(
-        title=event_in.title,
-        description=event_in.description,
-        date=event_in.date,
-        location=event_in.location,
-        max_participants=event_in.max_participants,
-        creator_id=event_in.creator_id, #надо будет сделать, чтобы автоматически вводилось
-        status="active"
-    )
+    new_event = Events(**event_in.model_dump())
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
 
     return new_event
-
 
 @router.patch("/{event_id}", response_model=EventFull)
 def update_event(
@@ -60,7 +49,7 @@ def update_event(
 ):
     db_event = db.query(Events).filter(Events.id == event_id).first()
     if not db_event:
-        raise HTTPException(status_code=404, detail="Событие не найдено")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Событие не найдено")
     # Извлекаем только присланные данные
     update_data = event_in.model_dump(exclude_unset=True)
     for key, value in update_data.items():
@@ -70,8 +59,6 @@ def update_event(
     db.refresh(db_event)
 
     return db_event
-
-
 
 @router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_event(

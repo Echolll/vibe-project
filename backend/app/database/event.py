@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
 
+
+
 class Events(Base):
     __tablename__ = 'events'
 
@@ -13,7 +15,7 @@ class Events(Base):
     location = Column(String, nullable = False)
     max_participants = Column(Integer, default = 10)
     creator_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now)
     status = Column(String, default = 'active')
 
     creator = relationship('Users', back_populates = 'created_events', foreign_keys = [creator_id])

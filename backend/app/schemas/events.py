@@ -3,12 +3,14 @@ from datetime import datetime
 from typing import Optional
 
 class EventShort(BaseModel):
+    id: int
     title: str
     date: datetime
     status: str
     model_config = ConfigDict(from_attributes=True)
 
 class EventFull(BaseModel):
+    id: int
     title: str = Field(..., min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
     date: datetime
@@ -23,15 +25,15 @@ class EventCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
     date: datetime
-    location: str
+    location: str = Field(..., min_length=2, max_length=200)
     max_participants: int = Field(10, gt=0)
-    creator_id: int
+    creator_id: int #надо будет сделать, чтобы автоматически вводилось
 
 class EventUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
     date: Optional[datetime] = None
-    location: Optional[str] = None
+    location: Optional[str] = Field(None, min_length=2, max_length=200)
     max_participants: Optional[int] = Field(None, gt=0)
     status: Optional[str] = None
 
