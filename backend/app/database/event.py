@@ -3,8 +3,6 @@ from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
 
-
-
 class Events(Base):
     __tablename__ = 'events'
 
