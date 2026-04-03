@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from ..database import Base
+from .database import Base
 from datetime import datetime
 
 class Users(Base):
@@ -14,12 +14,10 @@ class Users(Base):
     avatar = Column(String)
     bio = Column(String)
     rating = Column(Float, default=0.0)
-    events_created = Column(Integer, default=0)
-    events_joined = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now())
 
     created_events = relationship('Events', back_populates = 'creator', foreign_keys = 'Events.creator_id')
     participant = relationship('Participants', back_populates = 'user', foreign_keys = 'Participants.user_id')
-    sent_reviews = relationship('Review', back_populates = 'from_user', foreign_keys = 'Review.from_user_id')
-    received_reviews = relationship('Review', back_populates = 'to_user', foreign_keys = 'Review.to_user_id')
+    sent_reviews = relationship('Reviews', back_populates = 'from_user', foreign_keys = 'Reviews.from_user_id')
+    received_reviews = relationship('Reviews', back_populates = 'to_user', foreign_keys = 'Reviews.to_user_id')
