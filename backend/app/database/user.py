@@ -15,9 +15,9 @@ class Users(Base):
     bio = Column(String)
     rating = Column(Float, default=0.0)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now)
 
     created_events = relationship('Events', back_populates = 'creator', foreign_keys = 'Events.creator_id')
-    participant = relationship('Participants', back_populates = 'user', foreign_keys = 'Participants.user_id')
+    participants = relationship('Participants', back_populates = 'user', foreign_keys = 'Participants.user_id')
     sent_reviews = relationship('Reviews', back_populates = 'from_user', foreign_keys = 'Reviews.from_user_id')
     received_reviews = relationship('Reviews', back_populates = 'to_user', foreign_keys = 'Reviews.to_user_id')

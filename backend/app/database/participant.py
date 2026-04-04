@@ -9,8 +9,8 @@ class Participants(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
     event_id = Column(Integer, ForeignKey('events.id'), nullable = False)
-    joined_at = Column(DateTime, default=datetime.now())
+    joined_at = Column(DateTime, default=datetime.now)
     status = Column(String, default = 'confirmed')
 
-    user = relationship('Users', back_populates = 'participant', foreign_keys = [user_id])
+    user = relationship('Users', back_populates = 'participants', foreign_keys = [user_id])
     event = relationship('Events', back_populates = 'participants', foreign_keys = [event_id])
