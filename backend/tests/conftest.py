@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 from backend.app.routes.routes import app
 from backend.app.database.database import Base, get_db
 from backend.app.database.event import Events
@@ -28,18 +29,25 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def client():
     with TestClient(app) as test_client:
         yield test_client
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def db():
     db = TestingSessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+@pytest.fixture(scope="function", autouse=True)
+def clean_db():
+    """Очищает все таблицы после каждого теста"""
+    yield
+    for table in reversed(Base.metadata.sorted_tables):
+        test_engine.execute(table.delete())
 
 def pytest_sessionfinish(session, exitstatus):
     try:
