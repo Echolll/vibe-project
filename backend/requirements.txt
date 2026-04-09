@@ -1,13 +1,21 @@
 # Веб-фреймворк
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+fastapi=0.135.3
+uvicorn[standard]=0.44.0
 
 # База данных
-sqlalchemy==2.0.23
+sqlalchemy=2.0.49
 
 # Работа с формами и данными
-python-multipart==0.0.6
+python-multipart=0.0.24
 
 # Тестирование
-pytest==8.0.0
-pytest-cov==4.1.0
+pytest=9.0.3
+pytest-cov=7.1.0
+
+# Безопасность
+python-jose[cryptography]=3.5.0
+passlib[bcrypt]=1.7.4
+
+# Валидация данных (уже есть в fastapi, но можно явно указать)
+pydantic=2.12.5
+pydantic-settings=2.13.1
