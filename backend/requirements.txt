@@ -1,0 +1,13 @@
+# Веб-фреймворк
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# База данных
+sqlalchemy==2.0.23
+
+# Работа с формами и данными
+python-multipart==0.0.6
+
+# Тестирование
+pytest==8.0.0
+pytest-cov==4.1.0
