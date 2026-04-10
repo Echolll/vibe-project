@@ -4,15 +4,20 @@ import { Link } from 'react-router-dom';
 function Home() {
   return (
     <div className="app">
-      {/* Герой */}
+      {/* Герой-блок */}
       <div className="hero">
         <h1 className="hero-title">Найдите идеальную компанию для досуга</h1>
-        <p className="hero-text">Знакомьтесь с людьми, которые разделяют ваши интересы. От походов до киновечеров — находите друзей для любых приключений.</p>
+        <p className="hero-text">
+          Знакомьтесь с людьми, которые разделяют ваши интересы. 
+          От походов до киновечеров — находите друзей для любых приключений.
+        </p>
         <div className="hero-buttons">
           <Link to="/events" className="button button-primary">
             Смотреть активности
           </Link>
-          <button className="button button-secondary">Создать активность</button>
+          <Link to="/create" className="button button-secondary">
+            Создать активность
+          </Link>
         </div>
       </div>
 

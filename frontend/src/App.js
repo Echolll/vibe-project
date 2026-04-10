@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import EventsPage from './pages/EventsPage';
-import EventDetailPage from './pages/EventDetailPage'; // Импортируем новую страницу
+import EventDetailPage from './pages/EventDetailPage';
+import CreateEventPage from './pages/CreateEventPage';  // ← добавить
 import './App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
+        <Route path="/create" element={<CreateEventPage />} />  // ← добавить
       </Routes>
     </BrowserRouter>
   );
