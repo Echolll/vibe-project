@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from .database import Base
+from backend.app.database.database import Base
 from datetime import datetime
 
 class Users(Base):
-    __tablename__ = 'users'
+    __tablename__: str = 'Users'
 
     id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False, unique=True)

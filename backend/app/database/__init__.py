@@ -1,8 +1,8 @@
-from backend.app.database.user import Users
-from backend.app.database.event import Events
-from backend.app.database.participant import Participants
-from backend.app.database.review import Reviews
-from backend.app.database.database import SessionLocal, get_db, engine, Base
+from .user import Users
+from .event import Events
+from .participant import Participants
+from .review import Reviews
+from .database import SessionLocal, get_db, engine, Base
 
 Base.metadata.create_all(bind=engine)
 
