@@ -1,15 +1,15 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
-from .database import Base
+from backend.app.database.database import Base
 from datetime import datetime
 
 class Reviews(Base):
-    __tablename__ = 'reviews'
+    __tablename__: str = 'Reviews'
 
     id = Column(Integer, primary_key=True)
-    from_user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    to_user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    event_id = Column(Integer, ForeignKey('events.id'), nullable = False)
+    from_user_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
+    to_user_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
+    event_id = Column(Integer, ForeignKey('Events.id'), nullable = False)
     rating = Column(Integer)
     comment = Column(String)
     created_at = Column(DateTime, default = datetime.now)

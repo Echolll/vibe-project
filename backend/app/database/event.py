@@ -4,7 +4,7 @@ from .database import Base
 from datetime import datetime
 
 class Events(Base):
-    __tablename__ = 'events'
+    __tablename__: str = 'Events'
 
     id = Column(Integer, primary_key = True)
     title = Column(String, nullable = False)
@@ -12,7 +12,7 @@ class Events(Base):
     date = Column(DateTime, nullable = False)
     location = Column(String, nullable = False)
     max_participants = Column(Integer, default = 10)
-    creator_id = Column(Integer, ForeignKey('users.id'), nullable = False)
+    creator_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
     created_at = Column(DateTime, default=datetime.now)
     status = Column(String, default = 'active')
 
