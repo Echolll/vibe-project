@@ -4,7 +4,8 @@ from backend.app.database import get_db
 from backend.app.routes import events,auth
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(title="Vibe-project",
+              description="Веб-сервис для поиска компании")
 app.include_router(events.router)
 app.include_router(auth.router)
 
@@ -15,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/",summary="Главная страница")
 def main_page():
     return {"message":"Главная страница"}
 
