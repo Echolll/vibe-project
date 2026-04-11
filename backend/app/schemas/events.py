@@ -50,14 +50,11 @@ class EventCreate(BaseModel):
     date: datetime
     location: str = Field(..., min_length=2, max_length=200)
     max_participants: int = Field(10, gt=0)
-    creator_id: int
-
     model_config = ConfigDict(
         json_schema_extra={
             "example": {k: EXAMPLE_EVENT[k] for k in ["title", "description", "date", "location", "max_participants", "creator_id"]}
         }
     )
-
 class EventUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
