@@ -12,7 +12,7 @@ class Reviews(Base):
     event_id = Column(Integer, ForeignKey('Events.id'), nullable = False)
     rating = Column(Integer)
     comment = Column(String)
-    created_at = Column(DateTime, default = datetime.now())
+    created_at = Column(DateTime, default = datetime.now)
 
     __table_args__ = (CheckConstraint('rating BETWEEN 1 AND 5'),)
 

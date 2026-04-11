@@ -12,14 +12,18 @@ router = APIRouter(
 
 DbSession = Annotated[Session, Depends(get_db)]
 
-@router.get("/", response_model = List[EventShort])
+@router.get("/", response_model = List[EventShort],
+            summary="Получить список всех событий",
+            description="Возвращает краткую информацию о всех мероприятиях."
+            )
 def get_events(db: DbSession):
-    events = db.query(Events.title,
-                      Events.date,
-                      Events.status).all()
+    events = db.query(Events).all()
     return events
 
-@router.get("/{event_id}", response_model =  EventFull)
+@router.get("/{event_id}", response_model =  EventFull,
+            summary="Получить полную информацию о событии",
+            description="Возвращает детальные данные конкретного события по его ID, включая описание и дополнительные поля."
+            )
 def get_event(db: DbSession,
               event_id: Annotated[int, Path(..., title="ID события", gt=0)],
               ):
@@ -31,27 +35,24 @@ def get_event(db: DbSession,
         )
     return event
 
-@router.post("/", response_model=EventFull)
+@router.post("/", response_model=EventFull,
+             summary="Создать новое событие",
+             description="Регистрирует новое событие в системе. На вход ожидается объект `EventCreate`."
+             )
 def create_event(
     db: DbSession,
     event_in: EventCreate ):
-    new_event = Events(
-        title=event_in.title,
-        description=event_in.description,
-        date=event_in.date,
-        location=event_in.location,
-        max_participants=event_in.max_participants,
-        creator_id=event_in.creator_id, #надо будет сделать, чтобы автоматически вводилось
-        status="active"
-    )
+    new_event = Events(**event_in.model_dump())
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
 
     return new_event
 
-
-@router.patch("/{event_id}", response_model=EventFull)
+@router.patch("/{event_id}", response_model=EventFull,
+              summary="Частичное обновление события",
+              description="Позволяет изменить только выбранные поля события. Если поле не передано в теле запроса, оно останется неизменным."
+              )
 def update_event(
         db: DbSession,
         event_id: Annotated[int, Path(..., gt=0)],
@@ -60,7 +61,7 @@ def update_event(
 ):
     db_event = db.query(Events).filter(Events.id == event_id).first()
     if not db_event:
-        raise HTTPException(status_code=404, detail="Событие не найдено")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Событие не найдено")
     # Извлекаем только присланные данные
     update_data = event_in.model_dump(exclude_unset=True)
     for key, value in update_data.items():
@@ -71,9 +72,10 @@ def update_event(
 
     return db_event
 
-
-
-@router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT,
+               summary="Удалить событие",
+               description="Безвозвратно удаляет событие из базы данных по его идентификатору."
+               )
 def delete_event(
     event_id: Annotated[int, Path(..., gt=0)],
     db: DbSession
