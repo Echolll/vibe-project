@@ -7,8 +7,17 @@ from backend.app.routes import events,auth
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.database.admin import create_admin
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Приложение запускается...")
+    create_admin()
+    yield
+    print("Приложение останавливается...")
+
 app = FastAPI(title="Vibe-project",
-              description="Веб-сервис для поиска компании")
+              description="Веб-сервис для поиска компании",
+              lifespan=lifespan)
 app.include_router(events.router)
 app.include_router(auth.router)
 
@@ -19,12 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@asynccontextmanager
-def lifespan(app: FastAPI):
-    print("Приложение запускается...")
-    create_admin()
-    yield
-    print("Приложение останавливается...")
+
 
 @app.get("/",summary="Главная страница")
 def main_page():
