@@ -7,8 +7,8 @@ class Participants(Base):
     __tablename__: str = 'Participants'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    event_id = Column(Integer, ForeignKey('events.id'), nullable = False)
+    user_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
+    event_id = Column(Integer, ForeignKey('Events.id'), nullable = False)
     joined_at = Column(DateTime, default=datetime.now)
     status = Column(String, default = 'confirmed')
 
