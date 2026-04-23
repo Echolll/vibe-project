@@ -60,19 +60,28 @@ def update_user(
     db.refresh(db_user)
     return db_user
 
-@router.patch("/me/password", response_model = UserFull,
+@router.patch("/{user_id}/password", response_model = UserFull,
               summary = "Изменение пользовательского пароля",
               description = "Позволяет изменить пароль пользователя"
               )
 def update_user_password(
     db: DbSession,
+    user_id: Annotated[int, Path(..., gt=0)],
     user_in: UserUpdatePassword,
     current_user: Users = Depends(get_current_user)
 ):
-    current_user.password_hash = hash_password(user_in.password)
+    db_user = db.query(Users).filter(Users.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Пользователь не найден")
+    if db_user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Вы не можете изменить данные другого пользователя"
+        )
+    db_user.password_hash = hash_password(user_in.password)
     db.commit()
     db.refresh(current_user)
-    return current_user
+    return None
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT,
                summary = "Удалить пользователя",
