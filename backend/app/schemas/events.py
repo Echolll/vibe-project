@@ -12,7 +12,8 @@ EXAMPLE_EVENT = {
     "max_participants": 6,
     "creator_id": 77,
     "created_at": "2026-04-04T10:30:00",
-    "status": "active"
+    "status": "active",
+    "confirmed_participants_count": 5
 }
 
 class EventShort(BaseModel):
@@ -38,6 +39,7 @@ class EventFull(BaseModel):
     creator_id: int
     created_at: datetime
     status: str = Field("active")
+    confirmed_participants_count: int = 0
 
     model_config = ConfigDict(
         from_attributes=True,

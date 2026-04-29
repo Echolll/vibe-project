@@ -30,6 +30,10 @@ def get_event(db: DbSession,
               event_id: Annotated[int, Path(..., title="ID события", gt=0)],
               ):
     event = db.query(Events).filter(Events.id == event_id).first()
+    event.confirmed_participants_count = db.query(Participants).filter(
+        Participants.event_id == event_id,
+        Participants.status == "accepted").count()
+
     if event is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
