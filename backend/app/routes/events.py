@@ -110,6 +110,9 @@ def delete_event(
 
     return None
 
+'''
+Присоединение
+'''
 
 @router.post("/{event_id}/join", status_code=status.HTTP_201_CREATED, response_model=ParticipantRead,
              summary="Присоединиться к событию",
