@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.database import get_db, Events, Users
 from backend.app.schemas.events import *
-from backend.app.utils.security import get_current_user
+from backend.app.services.auth import get_current_user
 
 router = APIRouter(
     prefix="/events",
