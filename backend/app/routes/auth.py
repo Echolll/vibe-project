@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -17,6 +17,21 @@ router = APIRouter(
             description="Создаётся аккаунт на основе имени, почты и хэшируемого пароля")
 def register(user_in: UserCreate,
              db: Session = Depends(get_db)):
+
+    existing_username = db.query(Users).filter(Users.username == user_in.username).first()
+    if existing_username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Пользователь с таким именем уже существует"
+        )
+
+    existing_email = db.query(Users).filter(Users.email == user_in.email).first()
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Пользователь с такой почтой уже существует" )
+
+
     user = Users(
         username=user_in.username,
         email=user_in.email,
