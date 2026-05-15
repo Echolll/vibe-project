@@ -14,6 +14,26 @@ router = APIRouter(
 
 DbSession = Annotated[Session, Depends(get_db)]
 
+@router.get('/me', response_model = UserFull,
+            summary = 'Получение текущего пользователя',
+            description = 'Возвращает полную информацию о пользователе')
+def get_user_me(current_user: Users = Depends(get_current_user)):
+    return current_user
+
+@router.get("/me/events", response_model = List[EventShort],
+            summary = "Получить список всех событий текущего пользователя",
+            description = "Возвращает краткую информацию о всех мероприятиях, созданных текущим пользователем"
+            )
+def get_my_events(db: DbSession,
+                  current_user: Users = Depends(get_current_user)):
+    events = current_user.created_events
+    # if not events:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_404_NOT_FOUND,
+    #         detail=f"Ваши события не найдены"
+    #     )
+    return events
+
 @router.get('/{user_id}', response_model = UserShort,
             summary = 'Получение частичной информации о пользователе',
             description = 'Возвращает id, username, avatar, is_active и rating')
@@ -27,12 +47,6 @@ def get_user(db: DbSession,
         )
     return user
 
-@router.get('/me', response_model = UserFull,
-            summary = 'Получение текущего пользователя',
-            description = 'Возвращает полную информацию о пользователе')
-def get_user_me(current_user: Users = Depends(get_current_user)):
-    return current_user
-
 @router.patch("/{user_id}", response_model = UserFull,
               summary = "Частичное обновление пользователя",
               description = "Позволяет изменить только выбранные поля пользователя. Если поле не передано в теле запроса, оно останется неизменным."
@@ -43,10 +57,10 @@ def update_user(
         user_in: UserUpdate,
         current_user: Users = Depends(get_current_user)
 ):
-    db_user = db.query(Users).filter(Users.id == user_id).first()
-    if not db_user:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Пользователь не найден")
-    if db_user.id != current_user.id:
+    # db_user = db.query(Users).filter(Users.id == user_id).first()
+    # if not db_user:
+    #     raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Пользователь не найден")
+    if user_id != current_user.id:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
             detail = "Вы не можете изменить данные другого пользователя"
@@ -55,10 +69,10 @@ def update_user(
     if "password" in update_data:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = "Используйте отдельный эндпоинт для смены пароля")
     for key, value in update_data.items():
-        setattr(db_user, key, value)
+        setattr(current_user, key, value)
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(current_user)
+    return current_user
 
 @router.patch("/{user_id}/password", response_model = UserFull,
               summary = "Изменение пользовательского пароля",
@@ -70,18 +84,18 @@ def update_user_password(
     user_in: UserUpdatePassword,
     current_user: Users = Depends(get_current_user)
 ):
-    db_user = db.query(Users).filter(Users.id == user_id).first()
-    if not db_user:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Пользователь не найден")
-    if db_user.id != current_user.id:
+    # db_user = db.query(Users).filter(Users.id == user_id).first()
+    # if not db_user:
+    #     raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Пользователь не найден")
+    if user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Вы не можете изменить данные другого пользователя"
         )
-    db_user.password_hash = hash_password(user_in.password)
+    current_user.password_hash = hash_password(user_in.password)
     db.commit()
     db.refresh(current_user)
-    return None
+    return current_user
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT,
                summary = "Удалить пользователя",
@@ -92,18 +106,18 @@ def delete_user(
     user_id: Annotated[int, Path(..., gt=0)],
     current_user: Users = Depends(get_current_user)
 ):
-    user = db.query(Users).filter(Users.id == user_id).first()
-    if not user:
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = f"Пользователь с id {user_id} не найден"
-        )
-    if user.id != current_user.id:
+    # user = db.query(Users).filter(Users.id == user_id).first()
+    # if not user:
+    #     raise HTTPException(
+    #         status_code = status.HTTP_404_NOT_FOUND,
+    #         detail = f"Пользователь с id {user_id} не найден"
+    #     )
+    if user_id != current_user.id:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
             detail = "У вас нет прав для удаления этого пользователя"
         )
-    db.delete(user)
+    db.delete(current_user)
     db.commit()
     return None
 
@@ -127,16 +141,3 @@ def get_events_user(db: DbSession,
     #     )
     return events
 
-@router.get("/me/events", response_model = List[EventShort],
-            summary = "Получить список всех событий текущего пользователя",
-            description = "Возвращает краткую информацию о всех мероприятиях, созданных текущим пользователем"
-            )
-def get_my_events(db: DbSession,
-                  current_user: Users = Depends(get_current_user)):
-    events = db.query(Events).filter(Events.creator_id == current_user.id).all()
-    # if not events:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_404_NOT_FOUND,
-    #         detail=f"Ваши события не найдены"
-    #     )
-    return events
