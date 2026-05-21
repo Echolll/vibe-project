@@ -4,7 +4,7 @@ from backend.app.database.database import Base
 from datetime import datetime
 
 class Participants(Base):
-    __tablename__ = 'Participants'
+    __tablename__: str = "Participants"
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
