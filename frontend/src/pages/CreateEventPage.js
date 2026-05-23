@@ -1,143 +1,127 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import './CreateEventPage.css';
 
 function CreateEventPage() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     title: '',
     description: '',
     date: '',
+    time: '',
     location: '',
-    max_participants: '',
-    creator_id: 1  // временно, потом можно будет выбирать пользователя
+    max_participants: ''
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Вы не авторизованы');
+      setLoading(false);
+      return;
+    }
+
+    const dateTime = `${form.date}T${form.time}:00`;
 
     try {
-      const response = await axios.post('http://localhost:8000/events/', {
-        title: formData.title,
-        description: formData.description,
-        date: formData.date,
-        location: formData.location,
-        max_participants: parseInt(formData.max_participants),
-        creator_id: formData.creator_id
+      await axios.post('http://localhost:8000/events/', {
+        title: form.title,
+        description: form.description,
+        date: dateTime,
+        location: form.location,
+        max_participants: parseInt(form.max_participants),
+        creator_id: 1
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-
-      if (response.status === 200 || response.status === 201) {
-        // Переход на страницу созданного события
-        navigate(`/events/${response.data.id}`);
-      }
+      navigate('/events');
     } catch (err) {
-      console.error('Ошибка при создании события:', err);
-      setError('Не удалось создать событие. Проверьте все поля.');
+      setError(err.response?.data?.detail || 'Ошибка создания события');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Создать событие</h1>
-      
-      {error && (
-        <div style={{ background: '#fee', color: 'red', padding: '10px', borderRadius: '8px', marginBottom: '20px' }}>
-          {error}
-        </div>
-      )}
+    <div className="create-page">
+      <header className="header">
+        <div className="logo">Компаньон</div>
+        <nav className="nav">
+          <Link to="/" className="nav-link">Главная</Link>
+          <Link to="/events" className="nav-link">Активности</Link>
+          <Link to="/create" className="nav-link create-link">Создать</Link>
+        </nav>
+      </header>
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Название события *</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-        </div>
+      <div className="create-container">
+        <h1>Создать активность</h1>
+        <p className="subtitle">Поделитесь своими планами и пригласите других присоединиться!</p>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Описание</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="create-form">
+          <div className="form-section">
+            <h3>Детали активности</h3>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Дата *</label>
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-        </div>
+            <div className="form-group">
+              <label>Название активности *</label>
+              <input
+                name="title"
+                placeholder="Например: Субботний утренний поход в Воробьевы горы"
+                value={form.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Место *</label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-        </div>
+            <div className="form-group">
+              <label>Описание *</label>
+              <textarea
+                name="description"
+                placeholder="Расскажите людям, чего ожидать, что взять с собой и другие важные детали..."
+                rows="5"
+                value={form.description}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Макс. участников</label>
-          <input
-            type="number"
-            name="max_participants"
-            value={formData.max_participants}
-            onChange={handleChange}
-            min="1"
-            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-          />
-        </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Дата *</label>
+                <input type="date" name="date" value={form.date} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Время *</label>
+                <input type="time" name="time" value={form.time} onChange={handleChange} required />
+              </div>
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            background: '#764ba2',
-            color: 'white',
-            padding: '12px',
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            marginTop: '10px'
-          }}
-        >
-          {loading ? 'Создание...' : 'Создать событие'}
-        </button>
-      </form>
+            <div className="form-group">
+              <label>Место *</label>
+              <input name="location" placeholder="Город, место проведения или точка встречи" value={form.location} onChange={handleChange} required />
+            </div>
+
+            <div className="form-group">
+              <label>Максимум участников *</label>
+              <input type="number" name="max_participants" placeholder="10" value={form.max_participants} onChange={handleChange} required />
+            </div>
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? 'Создание...' : 'Создать активность'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
