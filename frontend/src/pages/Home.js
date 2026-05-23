@@ -1,40 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styles from './Home.module.css';
 
 function Home() {
-  return (
-    <div className="app">
-      {/* Герой-блок */}
-      <div className="hero">
-        <h1 className="hero-title">Найдите идеальную компанию для досуга</h1>
-        <p className="hero-text">
-          Знакомьтесь с людьми, которые разделяют ваши интересы. 
-          От походов до киновечеров — находите друзей для любых приключений.
-        </p>
-        <div className="hero-buttons">
-          <Link to="/events" className="button button-primary">
-            Смотреть активности
-          </Link>
-          <Link to="/create" className="button button-secondary">
-            Создать активность
-          </Link>
-        </div>
-      </div>
+  const token = localStorage.getItem('token');
 
-      {/* Категории */}
-      <div className="categories">
-        <h2 className="section-title">Категории</h2>
-        <div className="categories-grid">
-          <div className="category-card">🏔️ Походы</div>
-          <div className="category-card">🎬 Кино</div>
-          <div className="category-card">🎲 Настольные игры</div>
-          <div className="category-card">✈️ Путешествия</div>
-          <div className="category-card">💪 Фитнес</div>
-          <div className="category-card">🍜 Еда и рестораны</div>
-          <div className="category-card">🎵 Музыка и концерты</div>
-          <div className="category-card">✨ Другое</div>
+  return (
+    <div className={styles.homeContainer}>
+      <header className={styles.header}>
+        <div className={styles.logo}>Компаньон</div>
+        <nav className={styles.nav}>
+          <Link to="/" className={`${styles.navLink} ${styles.active}`}>Главная</Link>
+          <Link to="/events" className={styles.navLink}>Активности</Link>
+          <Link to="/create" className={`${styles.navLink} ${styles.createLink}`}>Создать</Link>
+        </nav>
+        <div className={styles.auth}>
+          {!token ? (
+            <>
+              <Link to="/login" className={styles.authLink}>Вход</Link>
+              <Link to="/register" className={`${styles.authLink} ${styles.registerBtn}`}>Регистрация</Link>
+            </>
+          ) : (
+            <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }} className={styles.logoutBtn}>
+              Выйти
+            </button>
+          )}
         </div>
-      </div>
+      </header>
+
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>Найдите идеальную компанию для досуга</h1>
+        <p className={styles.heroSubtitle}>
+          Знакомьтесь с людьми, которые разделяют ваши интересы. 
+          От походов до кинотеатров — находите друзей для любых приключений.
+        </p>
+        <div className={styles.heroButtons}>
+          <Link to="/events" className={`${styles.btn} ${styles.btnPrimary}`}>Смотреть активности</Link>
+          <Link to="/create" className={`${styles.btn} ${styles.btnSecondary}`}>Создать активность</Link>
+        </div>
+      </section>
     </div>
   );
 }
