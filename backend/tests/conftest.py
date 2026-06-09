@@ -8,7 +8,7 @@ from backend.app.routes.routes import app
 from backend.app.database.database import Base, get_db
 from backend.app.database.event import Events
 from backend.app.database.user import Users
-from backend.app.utils.security import get_current_user
+from backend.app.utils.security import hash_password
 
 temp_db_file = tempfile.NamedTemporaryFile(delete=False, suffix='.db')
 TEST_DATABASE_URL = f"sqlite:///{temp_db_file.name}"
@@ -28,11 +28,7 @@ def override_get_db():
     finally:
         db.close()
 
-def override_get_current_user():
-    return Users(id=1, username="test_user", email="test@test.com")
-
 app.dependency_overrides[get_db] = override_get_db
-app.dependency_overrides[get_current_user] = override_get_current_user
 
 @pytest.fixture(scope='function')
 def client():
@@ -48,6 +44,34 @@ def db():
         yield db
     finally:
         db.close()
+
+@pytest.fixture(scope='function')
+def user_token_headers(client, db):
+    user = Users(
+        username="main_user",
+        email="main@test.com",
+        password_hash=hash_password("password123")
+    )
+    db.add(user)
+    db.commit()
+    
+    response = client.post("/auth/login", data={"username": "main_user", "password": "password123"})
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+@pytest.fixture(scope='function')
+def other_user_token_headers(client, db):
+    user = Users(
+        username="other_user",
+        email="other@test.com",
+        password_hash=hash_password("password123")
+    )
+    db.add(user)
+    db.commit()
+    
+    response = client.post("/auth/login", data={"username": "other_user", "password": "password123"})
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
 
 def pytest_sessionfinish(session, exitstatus):
     try:

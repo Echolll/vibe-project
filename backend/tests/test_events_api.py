@@ -8,10 +8,10 @@ def test_get_events_empty(client):
     assert response.json() == []
 
 
-def test_create_event_success(client):
+def test_create_event_success(client, user_token_headers):
     future_date = (datetime.now() + timedelta(days=30)).isoformat()
     
-    response = client.post("/events/", json={
+    response = client.post("/events/", headers=user_token_headers, json={
         "title": "Поход в горы",
         "description": "Идём на Эльбрус",
         "date": future_date,
@@ -80,13 +80,13 @@ def test_get_event_not_found(client):
     assert "не найдено" in response.json()["detail"].lower()
 
 
-def test_create_event_missing_fields(client):
-    response = client.post("/events/", json={"title": "Только название"})
+def test_create_event_missing_fields(client, user_token_headers):
+    response = client.post("/events/", headers=user_token_headers, json={"title": "Только название"})
     assert response.status_code == 422
 
 
-def test_create_event_invalid_date(client):
-    response = client.post("/events/", json={
+def test_create_event_invalid_date(client, user_token_headers):
+    response = client.post("/events/", headers=user_token_headers, json={
         "title": "Событие",
         "date": "not-a-date",
         "location": "Место",
@@ -96,7 +96,7 @@ def test_create_event_invalid_date(client):
     assert response.status_code == 422
 
 
-def test_update_event_success(client, db):
+def test_update_event_success(client, db, user_token_headers):
     event = Events(
         title="Старое название",
         description="Старое описание",
@@ -110,14 +110,14 @@ def test_update_event_success(client, db):
     db.commit()
     event_id = event.id
     
-    response = client.patch(f"/events/{event_id}", json={"title": "Новое название"})
+    response = client.patch(f"/events/{event_id}", headers=user_token_headers, json={"title": "Новое название"})
     assert response.status_code == 200
     data = response.json()
     assert data["title"] == "Новое название"
     assert data["description"] == "Старое описание"
 
 
-def test_update_event_partial(client, db):
+def test_update_event_partial(client, db, user_token_headers):
     event = Events(
         title="Для обновления",
         description="Описание",
@@ -131,18 +131,18 @@ def test_update_event_partial(client, db):
     db.commit()
     event_id = event.id
     
-    response = client.patch(f"/events/{event_id}", json={"max_participants": 50})
+    response = client.patch(f"/events/{event_id}", headers=user_token_headers, json={"max_participants": 50})
     assert response.status_code == 200
     assert response.json()["max_participants"] == 50
 
 
-def test_update_event_not_found(client):
-    response = client.patch("/events/99999", json={"title": "Новое"})
+def test_update_event_not_found(client, user_token_headers):
+    response = client.patch("/events/99999", headers=user_token_headers, json={"title": "Новое"})
     assert response.status_code == 404
     assert "не найдено" in response.json()["detail"].lower()
 
 
-def test_delete_event_success(client, db):
+def test_delete_event_success(client, db, user_token_headers):
     event = Events(
         title="Для удаления",
         date=datetime.now() + timedelta(days=30),
@@ -155,14 +155,14 @@ def test_delete_event_success(client, db):
     db.commit()
     event_id = event.id
     
-    response = client.delete(f"/events/{event_id}")
+    response = client.delete(f"/events/{event_id}", headers=user_token_headers)
     assert response.status_code == 204
     
     get_response = client.get(f"/events/{event_id}")
     assert get_response.status_code == 404
 
 
-def test_delete_event_not_found(client):
-    response = client.delete("/events/99999")
+def test_delete_event_not_found(client, user_token_headers):
+    response = client.delete("/events/99999", headers=user_token_headers)
     assert response.status_code == 404
     assert "не найдено" in response.json()["detail"].lower()

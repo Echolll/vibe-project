@@ -25,3 +25,11 @@ jobs:
       - name: Run Events Tests
         if: always()
         run: python -m pytest backend/tests/test_events_api.py -v
+
+      - name: Run Users Tests
+        if: always()
+        run: python -m pytest backend/tests/test_users_api.py -v
+
+      - name: Run Reviews Tests
+        if: always()
+        run: python -m pytest backend/tests/test_reviews_api.py -v
