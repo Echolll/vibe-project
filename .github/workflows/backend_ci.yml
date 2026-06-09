@@ -18,8 +18,9 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: python -m pytest backend/tests/ -v || echo "No tests found — continuing"
-        continue-on-error: true
-        
-    
+      - name: Run Auth Tests
+        run: python -m pytest backend/tests/test_auth_api.py -v
+
+      - name: Run Events Tests
+        if: always()
+        run: python -m pytest backend/tests/test_events_api.py -v
