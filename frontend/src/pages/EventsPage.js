@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents } from '../services/api';
+import Header from '../components/Header';
 import './EventsPage.css';
 
 function EventsPage() {
   const [events, setEvents] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -27,29 +27,7 @@ function EventsPage() {
 
   return (
     <div className="events-page">
-      <header className="header">
-        <div className="logo">Вайб</div>
-        <nav className="nav">
-          <Link to="/" className="nav-link">Главная</Link>
-          <Link to="/events" className="nav-link active">Активности</Link>
-          <Link to="/create" className="nav-link create-link">Создать</Link>
-        </nav>
-        <div className="auth">
-          <div className="user-menu">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="profile-btn">
-              Профиль ▾
-            </button>
-            {isMenuOpen && (
-              <div className="dropdown-menu">
-                <Link to="/profile" className="dropdown-item">Мой профиль</Link>
-                <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }} className="dropdown-item" style={{color: '#ef4444'}}>
-                  Выйти
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className="events-hero">
         <h1>Активности</h1>

@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, Path, HTTPException, status
 from typing import List,Annotated
 from sqlalchemy.orm import Session
 
-from backend.app.database import get_db, Events, Users
+from backend.app.database import get_db, Events, Users, Participants, Reviews
 from backend.app.schemas.users import *
 from backend.app.schemas.events import *
-from backend.app.utils.security import get_current_user, hash_password
+from backend.app.utils.security import get_current_user, hash_password, verify_password
 
 router = APIRouter(
     prefix = "/users",
@@ -104,19 +104,31 @@ def update_user_password(
 def delete_user(
     db: DbSession,
     user_id: Annotated[int, Path(..., gt=0)],
+    request: UserDeleteRequest,
     current_user: Users = Depends(get_current_user)
 ):
-    # user = db.query(Users).filter(Users.id == user_id).first()
-    # if not user:
-    #     raise HTTPException(
-    #         status_code = status.HTTP_404_NOT_FOUND,
-    #         detail = f"Пользователь с id {user_id} не найден"
-    #     )
     if user_id != current_user.id:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
             detail = "У вас нет прав для удаления этого пользователя"
         )
+    
+    if not verify_password(request.password, current_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Неверный пароль"
+        )
+
+    # Каскадное удаление всех связанных данных пользователя
+    user_events = db.query(Events).filter(Events.creator_id == current_user.id).all()
+    for ev in user_events:
+        db.query(Participants).filter(Participants.event_id == ev.id).delete(synchronize_session=False)
+        db.query(Reviews).filter(Reviews.event_id == ev.id).delete(synchronize_session=False)
+        db.delete(ev)
+        
+    db.query(Participants).filter(Participants.user_id == current_user.id).delete(synchronize_session=False)
+    db.query(Reviews).filter((Reviews.from_user_id == current_user.id) | (Reviews.to_user_id == current_user.id)).delete(synchronize_session=False)
+
     db.delete(current_user)
     db.commit()
     return None

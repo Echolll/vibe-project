@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #333;
 }
 
 .detail-header {
@@ -53,7 +53,7 @@
 .cover-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+  background: linear-gradient(135deg, var(--vibe-primary) 0%, var(--vibe-accent) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,11 +81,13 @@
 }
 
 .info-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
 }
 
 .info-card h3 {
@@ -121,11 +123,13 @@
 
 /* Прогресс бар */
 .progress-section {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
 }
 
 .progress-bar {
@@ -139,7 +143,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
+  background: linear-gradient(90deg, var(--vibe-accent) 0%, var(--vibe-primary) 100%);
   border-radius: 999px;
   transition: width 0.5s ease-out;
 }
@@ -175,15 +179,14 @@
 }
 
 .btn-join {
-  background: #6366f1;
+  background: linear-gradient(135deg, var(--vibe-primary), var(--vibe-accent));
   color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
 }
 
 .btn-join:hover:not(.disabled) {
-  background: #4f46e5;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
 }
 
 .btn-join.disabled {
@@ -217,12 +220,27 @@
 }
 
 .btn-manage {
-  background: #1e293b;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   color: white;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
 }
 
 .btn-manage:hover {
-  background: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.5);
+}
+
+.btn-delete-event {
+  background: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+}
+
+.btn-delete-event:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
   transform: translateY(-2px);
 }
 

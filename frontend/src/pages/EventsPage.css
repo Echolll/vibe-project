@@ -1,17 +1,20 @@
 .events-page {
-  background: #f8fafc;
+  /* Использует глобальный фон из body */
   min-height: 100vh;
 }
 
 .events-hero {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
   text-align: center;
-  padding: 60px 20px;
+  padding: 40px 20px 20px;
 }
 
 .events-hero h1 {
-  font-size: 42px;
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4c1d95, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   margin-bottom: 16px;
 }
 
@@ -25,10 +28,19 @@
   width: 100%;
   padding: 14px 20px;
   border-radius: 50px;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   font-size: 16px;
   margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  transition: all 0.3s;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--vibe-primary);
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
 }
 
 .results-header {
@@ -45,21 +57,24 @@
 }
 
 .event-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 20px;
   text-decoration: none;
   color: #1a202c;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--glass-border);
 }
 
 .event-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
 }
 
 .event-card-image {
@@ -70,12 +85,12 @@
 .event-card-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+  background: linear-gradient(135deg, var(--vibe-primary) 0%, var(--vibe-accent) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .event-card:hover .event-card-placeholder {
@@ -106,35 +121,37 @@
   display: flex;
   gap: 16px;
   font-size: 13px;
-  color: #764ba2;
+  color: var(--vibe-primary);
+  font-weight: 500;
 }
 
 .loading {
   text-align: center;
   padding: 60px;
   font-size: 18px;
-  color: #764ba2;
+  color: var(--vibe-primary);
 }
 
 /* Шапка и авторизация */
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 16px 40px;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
   z-index: 100;
-  flex-wrap: wrap;
-  gap: 16px;
 }
 
 .logo {
+  justify-self: start;
   font-size: 24px;
-  font-weight: bold;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -142,29 +159,44 @@
 }
 
 .nav {
+  justify-self: center;
   display: flex;
   gap: 32px;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #4a5568;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 0;
   transition: color 0.2s;
-  white-space: nowrap;
+  position: relative;
 }
 
 .nav-link:hover, .nav-link.active {
-  color: #764ba2;
+  color: #8b5cf6;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6366f1;
+  border-radius: 2px;
 }
 
 .create-link {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #6366f1;
   color: white !important;
-  padding: 8px 20px;
-  border-radius: 25px;
+  padding: 8px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .create-link:hover {
@@ -173,6 +205,7 @@
 }
 
 .auth {
+  justify-self: end;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -200,12 +233,14 @@
 }
 
 .profile-btn {
-  background: none;
+  background: white;
   border: 1px solid #e2e8f0;
   padding: 8px 20px;
-  border-radius: 25px;
+  border-radius: 9999px;
   cursor: pointer;
   font-weight: 500;
+  color: #1e293b;
+  font-size: 14px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -222,9 +257,12 @@
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: var(--glass-shadow);
   padding: 8px;
   min-width: 150px;
   display: flex;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   getUserProfile, 
@@ -7,13 +7,16 @@ import {
   getUserRating, 
   getUserReviews, 
   createReview,
-  getEvents
+  getEvents,
+  deleteUser
 } from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 import './ProfilePage.css';
 
 function ProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { openLoginModal, logout } = useContext(AuthContext);
   
   const [profile, setProfile] = useState(null);
   const [rating, setRating] = useState(null);
@@ -27,9 +30,9 @@ function ProfilePage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState({ username: '', email: '', full_name: '', bio: '', avatar: '' });
   
-  // Состояния модального окна для аватара
-  const [showAvatarPrompt, setShowAvatarPrompt] = useState(false);
-  const [tempAvatarUrl, setTempAvatarUrl] = useState('');
+  // Состояния для удаления аккаунта
+  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
   
   // Состояние формы отзыва
   const [newReviewText, setNewReviewText] = useState('');
@@ -49,7 +52,8 @@ function ProfilePage() {
   useEffect(() => {
     if (isMyProfile && !token) {
       // Если пытаемся зайти в свой профиль без токена
-      navigate('/login');
+      navigate('/');
+      openLoginModal();
       return;
     }
     loadData();
@@ -140,6 +144,23 @@ function ProfilePage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      alert("Пожалуйста, введите пароль для подтверждения");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await deleteUser(profile.id, deletePassword);
+      logout();
+      navigate('/');
+    } catch (err) {
+      alert(err.response?.data?.detail || 'Ошибка при удалении аккаунта');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (loading) return <div className="loading">Загрузка профиля...</div>;
   if (!profile) return <div className="loading">Профиль не найден</div>;
   
@@ -155,24 +176,11 @@ function ProfilePage() {
         {/* Левая колонка - Карточка пользователя */}
         <div className="profile-sidebar">
           <div className="user-card">
-            <div 
-              className="avatar avatar-editable"
-              onClick={() => {
-                if (!isMyProfile) return;
-                setTempAvatarUrl(profile.avatar || '');
-                setShowAvatarPrompt(true);
-              }}
-              title={isMyProfile ? "Кликните, чтобы изменить фото" : ""}
-            >
+            <div className="avatar">
               {profile.avatar ? (
                 <img src={profile.avatar} alt="Аватар" className="avatar-image" />
               ) : (
                 <div className="avatar-placeholder">{profile.username.charAt(0).toUpperCase()}</div>
-              )}
-              {isMyProfile && (
-                <div className="avatar-overlay">
-                  <span>Изменить</span>
-                </div>
               )}
             </div>
             <h1 className="username">{profile.full_name || profile.username}</h1>
@@ -197,9 +205,14 @@ function ProfilePage() {
             )}
             
             {isMyProfile && (
-              <button className="btn-edit" onClick={() => setShowEditModal(true)}>
-                Редактировать профиль
-              </button>
+              <>
+                <button className="btn-edit" onClick={() => setShowEditModal(true)}>
+                  Редактировать профиль
+                </button>
+                <button className="btn-delete" onClick={() => setShowDeletePrompt(true)}>
+                  Удалить аккаунт
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -267,7 +280,7 @@ function ProfilePage() {
 
             {!isMyProfile && !token && (
               <div className="auth-prompt">
-                <Link to="/login">Войдите</Link>, чтобы оставить отзыв.
+                <button onClick={openLoginModal} style={{ background: 'none', border: 'none', color: '#4c1d95', textDecoration: 'underline', cursor: 'pointer', fontSize: '16px', padding: 0, fontFamily: 'inherit' }}>Войдите</button>, чтобы оставить отзыв.
               </div>
             )}
 
@@ -278,7 +291,9 @@ function ProfilePage() {
                 {reviews.map(review => (
                   <div key={review.id} className="review-card">
                     <div className="review-header">
-                      <span className="review-author">Пользователь #{review.from_user_id}</span>
+                      <span className="review-author">
+                        {review.from_user ? (review.from_user.full_name || review.from_user.username) : `Пользователь #${review.from_user_id}`}
+                      </span>
                       <span className="review-rating">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
                     </div>
                     <p className="review-text">{review.comment}</p>
@@ -292,41 +307,7 @@ function ProfilePage() {
         </div>
       </div>
 
-      {/* Модальное окно для смены аватара */}
-      {showAvatarPrompt && (
-        <div className="modal-overlay" onClick={() => setShowAvatarPrompt(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h3>Обновить аватар</h3>
-            <p>Вставьте прямую ссылку на изображение (URL)</p>
-            <input 
-              type="url" 
-              placeholder="https://example.com/photo.jpg" 
-              value={tempAvatarUrl}
-              onChange={e => setTempAvatarUrl(e.target.value)}
-              className="modal-input"
-              autoFocus
-            />
-            <div className="modal-actions">
-              <button 
-                className="btn-submit" 
-                onClick={() => {
-                  setEditForm({...editForm, avatar: tempAvatarUrl});
-                  setShowAvatarPrompt(false);
-                }}
-              >
-                Применить
-              </button>
-              <button 
-                className="btn-edit" 
-                style={{ marginTop: 0 }}
-                onClick={() => setShowAvatarPrompt(false)}
-              >
-                Отмена
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Модальное окно редактирования профиля */}
       {showEditModal && (
@@ -393,6 +374,36 @@ function ProfilePage() {
                 {submitting ? 'Сохранение...' : 'Сохранить изменения'}
               </button>
               <button className="btn-edit" style={{ marginTop: 0 }} onClick={() => setShowEditModal(false)} disabled={submitting}>
+                Отмена
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно подтверждения удаления */}
+      {showDeletePrompt && (
+        <div className="modal-overlay" onClick={() => setShowDeletePrompt(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h3>Удаление аккаунта</h3>
+            <p style={{ color: '#ef4444' }}>Вы уверены, что хотите навсегда удалить свой аккаунт? Это действие нельзя отменить.</p>
+            
+            <div className="form-group">
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: '#475569' }}>Введите пароль для подтверждения:</label>
+              <input 
+                type="password" 
+                value={deletePassword} 
+                onChange={e => setDeletePassword(e.target.value)}
+                className="modal-input"
+                placeholder="Ваш текущий пароль"
+              />
+            </div>
+
+            <div className="modal-actions">
+              <button className="btn-delete" onClick={handleDeleteAccount} disabled={submitting || !deletePassword} style={{ marginTop: 0 }}>
+                {submitting ? 'Удаление...' : 'Да, удалить навсегда'}
+              </button>
+              <button className="btn-edit" style={{ marginTop: 0 }} onClick={() => {setShowDeletePrompt(false); setDeletePassword('');}} disabled={submitting}>
                 Отмена
               </button>
             </div>

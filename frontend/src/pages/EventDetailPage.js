@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getEventById, joinEvent, leaveEvent, getUserEventStatus, getUserProfile } from '../services/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getEventById, joinEvent, leaveEvent, getUserEventStatus, getUserProfile, deleteEvent } from '../services/api';
 import './EventDetailPage.css';
 
 function EventDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [userStatus, setUserStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [creatorName, setCreatorName] = useState('');
+  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
 
   const loadData = async () => {
     try {
@@ -70,6 +72,18 @@ function EventDetailPage() {
       await loadData();
     } catch (err) {
       alert(err.response?.data?.detail || 'Ошибка при отмене');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    setActionLoading(true);
+    try {
+      await deleteEvent(id);
+      navigate('/events');
+    } catch (err) {
+      alert(err.response?.data?.detail || 'Ошибка при удалении события');
     } finally {
       setActionLoading(false);
     }
@@ -184,15 +198,39 @@ function EventDetailPage() {
               </button>
             )}
 
-            {/* Ссылка для организатора */}
+            {/* Ссылки для организатора */}
             {isOrganizer && (
-              <Link to={`/events/${id}/manage`} className="btn-action btn-manage">
-                🛠 Управлять участниками
-              </Link>
+              <>
+                <Link to={`/events/${id}/manage`} className="btn-action btn-manage">
+                  🛠 Управлять участниками
+                </Link>
+                <button onClick={() => setShowDeletePrompt(true)} disabled={actionLoading} className="btn-action btn-delete-event">
+                  🗑 Удалить событие
+                </button>
+              </>
             )}
           </div>
         </div>
       </div>
+
+      {/* Модальное окно удаления события */}
+      {showDeletePrompt && (
+        <div className="modal-overlay" onClick={() => setShowDeletePrompt(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h3>Удаление активности</h3>
+            <p style={{ color: '#ef4444' }}>Вы уверены, что хотите удалить это событие? Все заявки и участники будут также удалены безвозвратно.</p>
+            
+            <div className="modal-actions" style={{ marginTop: '24px' }}>
+              <button className="btn-delete" onClick={handleDeleteEvent} disabled={actionLoading} style={{ marginTop: 0, flex: 1 }}>
+                {actionLoading ? 'Удаление...' : 'Да, удалить'}
+              </button>
+              <button className="btn-edit" onClick={() => setShowDeletePrompt(false)} disabled={actionLoading} style={{ marginTop: 0, flex: 1 }}>
+                Отмена
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from typing import List
 
@@ -62,7 +62,7 @@ def create_review(
     description="Возвращает массив всех когда-либо оставленных текстовых отзывов и оценок НА конкретного пользователя."
 )
 def get_user_reviews(user_id: int, db: Session = Depends(get_db)):
-    reviews = db.query(Reviews).filter(Reviews.to_user_id == user_id).all()
+    reviews = db.query(Reviews).options(joinedload(Reviews.from_user)).filter(Reviews.to_user_id == user_id).all()
     return reviews
 
 

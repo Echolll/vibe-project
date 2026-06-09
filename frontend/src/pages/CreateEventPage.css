@@ -1,5 +1,5 @@
 .create-page {
-  background: #f8fafc;
+  /* Использует глобальный фон из body */
   min-height: 100vh;
 }
 
@@ -22,10 +22,13 @@
 }
 
 .create-form {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: var(--glass-shadow);
 }
 
 .form-section h3 {
@@ -57,7 +60,8 @@
 
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
   outline: none;
-  border-color: #764ba2;
+  border-color: var(--vibe-primary);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
 }
 
 .form-row {
@@ -69,20 +73,21 @@
 .submit-btn {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--vibe-primary), var(--vibe-secondary));
   color: white;
   border: none;
-  border-radius: 40px;
+  border-radius: 9999px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
   margin-top: 16px;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
 }
 
 .error-message {

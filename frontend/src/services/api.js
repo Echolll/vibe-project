@@ -73,6 +73,11 @@ export const updateUserProfile = async (userId, data) => {
   return response.data;
 };
 
+export const deleteUser = async (userId, password) => {
+  const response = await apiClient.delete(`/users/${userId}`, { data: { password } });
+  return response.data;
+};
+
 // (Временно, если на бэкенде появится ручка для событий конкретного юзера. Пока будем тянуть все и фильтровать)
 // Но так как у нас нет /users/{id}/events, мы можем просто загрузить все события и отфильтровать по creator_id
 
@@ -107,5 +112,10 @@ export const getEventById = async (id) => {
 
 export const createEvent = async (eventData) => {
   const response = await apiClient.post('/events/', eventData);
+  return response.data;
+};
+
+export const deleteEvent = async (eventId) => {
+  const response = await apiClient.delete(`/events/${eventId}`);
   return response.data;
 };

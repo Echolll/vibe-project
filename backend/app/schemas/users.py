@@ -101,3 +101,5 @@ class UserUpdatePassword(BaseModel):
         }
     )
 
+class UserDeleteRequest(BaseModel):
+    password: str = Field(..., description="Пароль пользователя для подтверждения удаления")
