@@ -1,14 +1,14 @@
 from sqlalchemy import Column, Integer, DateTime, String, ForeignKey
 from sqlalchemy.orm import relationship
-from .database import Base
+from backend.app.database.database import Base
 from datetime import datetime
 
 class Participants(Base):
-    __tablename__ = 'participants'
+    __tablename__: str = 'Participants'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    event_id = Column(Integer, ForeignKey('events.id'), nullable = False)
+    user_id = Column(Integer, ForeignKey('Users.id'), nullable = False)
+    event_id = Column(Integer, ForeignKey('Events.id'), nullable = False)
     joined_at = Column(DateTime, default=datetime.now)
     status = Column(String, default = 'confirmed')
 

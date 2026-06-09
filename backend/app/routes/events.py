@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, Path, HTTPException, status
 from typing import List,Annotated
 from sqlalchemy.orm import Session
-from backend.app.database import get_db, Events
-from backend.app.schemas.events import *
 
+from backend.app.database import get_db, Events, Users
+from backend.app.schemas.events import *
+from backend.app.utils.security import get_current_user
 
 router = APIRouter(
     prefix="/events",
@@ -41,8 +42,10 @@ def get_event(db: DbSession,
              )
 def create_event(
     db: DbSession,
-    event_in: EventCreate ):
-    new_event = Events(**event_in.model_dump())
+    event_in: EventCreate,
+    current_user: Users = Depends(get_current_user)
+):
+    new_event = Events(**event_in.model_dump(), creator_id = current_user.id)
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
@@ -57,13 +60,19 @@ def update_event(
         db: DbSession,
         event_id: Annotated[int, Path(..., gt=0)],
         event_in: EventUpdate,
+        current_user: Users = Depends(get_current_user)
 
 ):
     db_event = db.query(Events).filter(Events.id == event_id).first()
     if not db_event:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Событие не найдено")
-    # Извлекаем только присланные данные
-    update_data = event_in.model_dump(exclude_unset=True)
+
+    if db_event.creator_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="У вас нет прав для редактирования этого события"
+        )
+    update_data = event_in.model_dump(exclude_unset=True) # Извлекаем только присланные данные
     for key, value in update_data.items():
         setattr(db_event, key, value)
 
@@ -78,7 +87,8 @@ def update_event(
                )
 def delete_event(
     event_id: Annotated[int, Path(..., gt=0)],
-    db: DbSession
+    db: DbSession,
+    current_user: Users = Depends(get_current_user)
 ):
     event = db.query(Events).filter(Events.id == event_id).first()
 
@@ -86,6 +96,12 @@ def delete_event(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Событие с id {event_id} не найдено"
+        )
+
+    if event.creator_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="У вас нет прав для удаления этого события"
         )
 
     db.delete(event)

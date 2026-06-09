@@ -1,12 +1,25 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
+
 from backend.app.database import get_db
-from backend.app.routes import events
+from backend.app.routes import events,auth
 from fastapi.middleware.cors import CORSMiddleware
+from backend.app.database.admin import create_admin
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Приложение запускается...")
+    create_admin()
+    yield
+    print("Приложение останавливается...")
 
 app = FastAPI(title="Vibe-project",
-              description="Веб-сервис для поиска компании")
+              description="Веб-сервис для поиска компании",
+              lifespan=lifespan)
 app.include_router(events.router)
+app.include_router(auth.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 
 @app.get("/",summary="Главная страница")
 def main_page():

@@ -1,0 +1,169 @@
+.manage-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.back-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #764ba2;
+  font-weight: 500;
+  margin-bottom: 30px;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  transform: translateX(-4px);
+  color: #5a3d80;
+}
+
+.manage-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 40px;
+  border-left: 4px solid #764ba2;
+  padding-left: 20px;
+}
+
+.participants-section {
+  background: white;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.pending-header {
+  background: #fef5e7;
+  color: #ed8936;
+  border-bottom: 1px solid #fde4c2;
+}
+
+.accepted-header {
+  background: #f0fff4;
+  color: #38a169;
+  border-bottom: 1px solid #c6f6d5;
+}
+
+.badge {
+  background: rgba(0,0,0,0.08);
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.participant-card {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.2s;
+}
+
+.participant-card:last-child {
+  border-bottom: none;
+}
+
+.participant-card:hover {
+  background: #f7fafc;
+}
+
+.participant-avatar {
+  margin-right: 16px;
+}
+
+.avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+.participant-info {
+  flex: 1;
+}
+
+.participant-name {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.participant-status {
+  font-size: 12px;
+}
+
+.status-pending {
+  color: #ed8936;
+}
+
+.status-accepted {
+  color: #38a169;
+}
+
+.participant-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-accept, .btn-reject {
+  padding: 8px 20px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-accept {
+  background: #48bb78;
+  color: white;
+}
+
+.btn-accept:hover {
+  background: #38a169;
+  transform: translateY(-1px);
+}
+
+.btn-reject {
+  background: #f56565;
+  color: white;
+}
+
+.btn-reject:hover {
+  background: #e53e3e;
+  transform: translateY(-1px);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #764ba2;
+}
