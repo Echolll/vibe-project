@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.routes.routes import app
 from backend.app.database.database import Base, get_db
 from backend.app.database.event import Events
+from backend.app.database.user import Users
+from backend.app.utils.security import get_current_user
 
 temp_db_file = tempfile.NamedTemporaryFile(delete=False, suffix='.db')
 TEST_DATABASE_URL = f"sqlite:///{temp_db_file.name}"
@@ -26,7 +28,11 @@ def override_get_db():
     finally:
         db.close()
 
+def override_get_current_user():
+    return Users(id=1, username="test_user", email="test@test.com")
+
 app.dependency_overrides[get_db] = override_get_db
+app.dependency_overrides[get_current_user] = override_get_current_user
 
 @pytest.fixture(scope='function')
 def client():

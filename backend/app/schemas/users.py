@@ -12,5 +12,4 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
