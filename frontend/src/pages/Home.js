@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
 
 function Home() {
   const token = localStorage.getItem('token');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div className={styles.homeContainer}>
       <header className={styles.header}>
-        <div className={styles.logo}>Компаньон</div>
+        <div className={styles.logo}>Вайб</div>
         <nav className={styles.nav}>
           <Link to="/" className={`${styles.navLink} ${styles.active}`}>Главная</Link>
           <Link to="/events" className={styles.navLink}>Активности</Link>
@@ -21,9 +22,19 @@ function Home() {
               <Link to="/register" className={`${styles.authLink} ${styles.registerBtn}`}>Регистрация</Link>
             </>
           ) : (
-            <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }} className={styles.logoutBtn}>
-              Выйти
-            </button>
+            <div className={styles.userMenu}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className={styles.profileBtn}>
+                Профиль ▾
+              </button>
+              {isMenuOpen && (
+                <div className={styles.dropdownMenu}>
+                  <Link to="/profile" className={styles.dropdownItem}>Мой профиль</Link>
+                  <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }} className={styles.dropdownItem} style={{color: '#ef4444'}}>
+                    Выйти
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </header>

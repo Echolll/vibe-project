@@ -54,7 +54,7 @@ function CreateEventPage() {
   return (
     <div className="create-page">
       <header className="header">
-        <div className="logo">Компаньон</div>
+        <div className="logo">Вайб</div>
         <nav className="nav">
           <Link to="/" className="nav-link">Главная</Link>
           <Link to="/events" className="nav-link">Активности</Link>

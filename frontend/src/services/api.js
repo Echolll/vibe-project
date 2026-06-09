@@ -55,6 +55,43 @@ export const getUserEventStatus = async (eventId) => {
     return { status: null };
   }
 };
+
+// ========== СВЯЗАННЫЕ С ПОЛЬЗОВАТЕЛЯМИ И ПРОФИЛЕМ ==========
+
+export const getMyProfile = async () => {
+  const response = await apiClient.get('/users/me');
+  return response.data;
+};
+
+export const getUserProfile = async (userId) => {
+  const response = await apiClient.get(`/users/${userId}`);
+  return response.data;
+};
+
+export const updateUserProfile = async (userId, data) => {
+  const response = await apiClient.patch(`/users/${userId}`, data);
+  return response.data;
+};
+
+// (Временно, если на бэкенде появится ручка для событий конкретного юзера. Пока будем тянуть все и фильтровать)
+// Но так как у нас нет /users/{id}/events, мы можем просто загрузить все события и отфильтровать по creator_id
+
+// ========== СВЯЗАННЫЕ С ОТЗЫВАМИ ==========
+
+export const getUserReviews = async (userId) => {
+  const response = await apiClient.get(`/reviews/user/${userId}`);
+  return response.data;
+};
+
+export const getUserRating = async (userId) => {
+  const response = await apiClient.get(`/reviews/user/${userId}/rating`);
+  return response.data;
+};
+
+export const createReview = async (reviewData) => {
+  const response = await apiClient.post('/reviews/', reviewData);
+  return response.data;
+};
  
 
 

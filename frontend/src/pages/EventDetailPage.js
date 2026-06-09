@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getEventById, joinEvent, leaveEvent, getUserEventStatus } from '../services/api';
+import { getEventById, joinEvent, leaveEvent, getUserEventStatus, getUserProfile } from '../services/api';
 import './EventDetailPage.css';
 
 function EventDetailPage() {
@@ -10,6 +10,7 @@ function EventDetailPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [creatorName, setCreatorName] = useState('');
 
   const loadData = async () => {
     try {
@@ -20,6 +21,14 @@ function EventDetailPage() {
       ]);
       setEvent(eventData);
       setUserStatus(statusData.status);
+      
+      // Загружаем инфу об организаторе
+      try {
+        const creatorData = await getUserProfile(eventData.creator_id);
+        setCreatorName(creatorData.full_name || creatorData.username);
+      } catch (err) {
+        setCreatorName(`Пользователь #${eventData.creator_id}`);
+      }
       
       // Пробуем получить ID текущего пользователя из токена
       try {
@@ -95,7 +104,7 @@ function EventDetailPage() {
         {/* Левая колонка — описание */}
         <div className="detail-main">
           <div className="cover-image">
-            <div className="cover-placeholder">🏞️</div>
+            <div className="cover-placeholder">🎉</div>
           </div>
           <h2>Об этой активности</h2>
           <p className="description">{event.description || 'Описание отсутствует'}</p>
@@ -116,6 +125,14 @@ function EventDetailPage() {
             <div className="info-row">
               <span className="info-label">📍 Место</span>
               <span className="info-value">{event.location || 'Не указано'}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">👤 Организатор</span>
+              <span className="info-value">
+                <Link to={isOrganizer ? "/profile" : `/users/${event.creator_id}`} style={{color: '#6366f1', textDecoration: 'none', fontWeight: 600}}>
+                  {creatorName || 'Загрузка...'} {isOrganizer && '(Вы)'}
+                </Link>
+              </span>
             </div>
             <div className="info-row">
               <span className="info-label">👥 Участники</span>

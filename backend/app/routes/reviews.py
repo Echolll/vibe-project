@@ -30,6 +30,17 @@ def create_review(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Вы не можете поставить оценку самому себе."
         )
+        
+    existing_review = db.query(Reviews).filter(
+        Reviews.from_user_id == current_user.id,
+        Reviews.to_user_id == review_data.to_user_id
+    ).first()
+    
+    if existing_review:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Вы уже оставляли отзыв этому пользователю."
+        )
 
     db_review = Reviews(
         from_user_id=current_user.id,  # Берем из токена авторизации

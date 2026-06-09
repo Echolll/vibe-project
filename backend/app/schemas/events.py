@@ -21,11 +21,14 @@ class EventShort(BaseModel):
     title: str
     date: datetime
     status: str
+    location: str | None = None
+    description: str | None = None
+    creator_id: int
 
     model_config = ConfigDict(
         from_attributes=True,
         json_schema_extra={
-            "example": {k: EXAMPLE_EVENT[k] for k in ["id", "title", "date", "status"]}
+            "example": {k: EXAMPLE_EVENT[k] for k in ["id", "title", "date", "status", "location", "description", "creator_id"]}
         }
     )
 

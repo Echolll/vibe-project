@@ -9,6 +9,8 @@ class UserShortInfo(BaseModel):
     username: str
     rating: float
     email: Optional[str] = None
+    full_name: Optional[str] = None
+    avatar: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -45,6 +45,7 @@ class UserOut(BaseModel):
 class UserShort(BaseModel):
     id: int
     username: str
+    full_name: str | None = Field(None)
     avatar: str | None = Field(None, description="Ссылка на аватар профиля")
     is_active: bool
     rating: float = Field(0.0)

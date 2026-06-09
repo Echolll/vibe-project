@@ -123,6 +123,62 @@
   color: #f56565;
 }
 
+.userMenu {
+  position: relative;
+}
+
+.profileBtn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileBtn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 8px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdownItem {
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+
+.dropdownItem:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
 /* ===== ГЕРОЙ-БЛОК ===== */
 .hero {
   text-align: center;
