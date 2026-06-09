@@ -34,6 +34,7 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
 
+
     model_config = ConfigDict(
         from_attributes=True,
         json_schema_extra={
@@ -98,3 +99,4 @@ class UserUpdatePassword(BaseModel):
             }
         }
     )
+
