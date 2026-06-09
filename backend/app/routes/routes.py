@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
 from backend.app.database import get_db
-from backend.app.routes import events,users,auth
+from backend.app.routes import events,users,auth,reviews
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.database.admin import create_admin
 
@@ -21,6 +21,7 @@ app = FastAPI(title="Vibe-project",
 app.include_router(events.router)
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(reviews.router)
 
 app.add_middleware(
     CORSMiddleware,
