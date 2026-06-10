@@ -82,7 +82,7 @@ python -m pytest backend/tests/ -v
 ## Команда проекта
 | Роль | Участник |
 |------|----------|
-| TeamLead / DevOps | [Echolll](https://github.com/Echolll) | 
+| Тестировщик | [Echolll](https://github.com/Echolll) | 
 | Backend #1 | [KateB78](https://github.com/KateB789) |
 | Backend #2 | [Vera98765](https://github.com/Vera98765) | 
 | Frontend #1 | [milanakokovina-stack](https://github.com/milanakokovina-stack) |
