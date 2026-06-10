@@ -1,0 +1,30 @@
+site_name: Vibe Documentation
+site_description: Официальная документация проекта Vibe
+theme:
+  name: material
+  language: ru
+  palette:
+    # Темная тема (основная)
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    # Светлая тема
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+nav:
+  - Главная: index.md
+  - Руководство пользователя: USER_GUIDE.md
+  - API (Бэкенд): API.md
+  - Архитектура Frontend: FRONTEND.md
+  - Архитектура и БД: ARCHITECTURE.md
+  - Для разработчиков: DEVELOPMENT.md
