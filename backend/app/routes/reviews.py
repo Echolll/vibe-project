@@ -33,7 +33,8 @@ def create_review(
         
     existing_review = db.query(Reviews).filter(
         Reviews.from_user_id == current_user.id,
-        Reviews.to_user_id == review_data.to_user_id
+        Reviews.to_user_id == review_data.to_user_id,
+        Reviews.event_id == review_data.event_id
     ).first()
     
     if existing_review:
