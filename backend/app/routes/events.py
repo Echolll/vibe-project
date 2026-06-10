@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Path, Query,HTTPException, status
 from typing import List,Annotated
 from sqlalchemy.orm import Session
 
-from backend.app.database import get_db, Events, Users, Participants
+from backend.app.database import get_db, Events, Users, Participants, Reviews
 from backend.app.schemas.events import *
 from backend.app.schemas.participants import *
 from backend.app.utils.security import get_current_user
@@ -108,6 +108,9 @@ def delete_event(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="У вас нет прав для удаления этого события"
         )
+
+    db.query(Participants).filter(Participants.event_id == event_id).delete(synchronize_session=False)
+    db.query(Reviews).filter(Reviews.event_id == event_id).delete(synchronize_session=False)
 
     db.delete(event)
     db.commit()

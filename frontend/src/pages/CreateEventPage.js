@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import Header from '../components/Header';
 import './CreateEventPage.css';
 
 function CreateEventPage() {
@@ -53,14 +54,7 @@ function CreateEventPage() {
 
   return (
     <div className="create-page">
-      <header className="header">
-        <div className="logo">Компаньон</div>
-        <nav className="nav">
-          <Link to="/" className="nav-link">Главная</Link>
-          <Link to="/events" className="nav-link">Активности</Link>
-          <Link to="/create" className="nav-link create-link">Создать</Link>
-        </nav>
-      </header>
+      <Header />
 
       <div className="create-container">
         <h1>Создать активность</h1>

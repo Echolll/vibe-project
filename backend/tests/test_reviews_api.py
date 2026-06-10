@@ -53,27 +53,31 @@ def test_create_review_self_forbidden(client, user_token_headers):
     assert "не можете поставить оценку самому себе" in response.json()["detail"].lower()
 
 def test_get_user_reviews(client, db, user_token_headers):
+    from backend.app.database import Reviews
+
     target_user = Users(
         username="target_user2",
         email="target2@test.com",
         password_hash=hash_password("password123")
     )
-    db.add(target_user)
+    reviewer1 = Users(
+        username="reviewer1",
+        email="rev1@test.com",
+        password_hash=hash_password("123")
+    )
+    reviewer2 = Users(
+        username="reviewer2",
+        email="rev2@test.com",
+        password_hash=hash_password("123")
+    )
+    db.add_all([target_user, reviewer1, reviewer2])
     db.commit()
     target_id = target_user.id
 
-    client.post("/reviews/", headers=user_token_headers, json={
-        "to_user_id": target_id,
-        "event_id": 1,
-        "rating": 4,
-        "comment": "Хорошо"
-    })
-    client.post("/reviews/", headers=user_token_headers, json={
-        "to_user_id": target_id,
-        "event_id": 1,
-        "rating": 5,
-        "comment": "Отлично"
-    })
+    r1 = Reviews(from_user_id=reviewer1.id, to_user_id=target_id, event_id=1, rating=4, comment="Хорошо")
+    r2 = Reviews(from_user_id=reviewer2.id, to_user_id=target_id, event_id=1, rating=5, comment="Отлично")
+    db.add_all([r1, r2])
+    db.commit()
 
     response = client.get(f"/reviews/user/{target_id}")
     assert response.status_code == 200

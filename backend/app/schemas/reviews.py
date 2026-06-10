@@ -9,6 +9,13 @@ class ReviewCreate(BaseModel):
     comment: str | None = Field(None, max_length=1000, description="Опциональный комментарий")
 
 
+class ReviewUserResponse(BaseModel):
+    id: int
+    username: str
+    full_name: str | None = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
 class ReviewResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True) # Для работы с объектами SQLAlchemy
 
@@ -19,6 +26,7 @@ class ReviewResponse(BaseModel):
     rating: int
     comment: str | None = Field(None)
     created_at: datetime
+    from_user: ReviewUserResponse | None = None
 
 class UserRatingResponse(BaseModel):
     user_id: int

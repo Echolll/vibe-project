@@ -1,0 +1,133 @@
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.auth-modal-content {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.auth-modal-close:hover {
+  color: #1e293b;
+}
+
+.auth-modal-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 24px 0;
+}
+
+.auth-error-message {
+  color: #ef4444;
+  margin: 0 0 16px 0;
+  font-size: 14px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  font-size: 16px;
+  outline: none;
+  background: white;
+  color: #1e293b;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.auth-input:focus {
+  border-color: #714d9f;
+  box-shadow: 0 0 0 3px rgba(113, 77, 159, 0.1);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #714d9f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s;
+  margin-top: 8px;
+  font-family: inherit;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background: #5a3d80;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-switch-text {
+  text-align: center;
+  margin: 24px 0 0 0;
+  color: #475569;
+  font-size: 14px;
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: #4c1d95;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 0 0 0 4px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

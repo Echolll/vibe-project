@@ -57,11 +57,21 @@ def test_update_password_me(client, user_token_headers):
     login_resp = client.post("/auth/login", data={"username": "main_user", "password": "new_password123"})
     assert login_resp.status_code == 200
 
-def test_delete_user_me(client, user_token_headers):
-    me_resp = client.get("/users/me", headers=user_token_headers)
-    user_id = me_resp.json()["id"]
+def test_delete_user_me(client, db):
+    user = Users(
+        username="delete_user",
+        email="delete@test.com",
+        password_hash=hash_password("delete123")
+    )
+    db.add(user)
+    db.commit()
+    user_id = user.id
 
-    response = client.delete(f"/users/{user_id}", headers=user_token_headers)
+    login_resp = client.post("/auth/login", data={"username": "delete_user", "password": "delete123"})
+    token = login_resp.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = client.request("DELETE", f"/users/{user_id}", headers=headers, json={"password": "delete123"})
     assert response.status_code == 204
 
     check_resp = client.get(f"/users/{user_id}")

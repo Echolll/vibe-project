@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getEvents } from '../services/api';
+import Header from '../components/Header';
 import './EventsPage.css';
 
 function EventsPage() {
@@ -26,19 +27,7 @@ function EventsPage() {
 
   return (
     <div className="events-page">
-      <header className="header">
-        <div className="logo">Компаньон</div>
-        <nav className="nav">
-          <Link to="/" className="nav-link">Главная</Link>
-          <Link to="/events" className="nav-link active">Активности</Link>
-          <Link to="/create" className="nav-link create-link">Создать</Link>
-        </nav>
-        <div className="auth">
-          <button onClick={() => { localStorage.removeItem('token'); window.location.href = '/'; }} className="logout-btn">
-            Выйти
-          </button>
-        </div>
-      </header>
+      <Header />
 
       <div className="events-hero">
         <h1>Активности</h1>
@@ -62,11 +51,16 @@ function EventsPage() {
         <div className="events-grid">
           {filteredEvents.map(event => (
             <Link to={`/events/${event.id}`} key={event.id} className="event-card">
-              <h3>{event.title}</h3>
-              <p className="event-description">{event.description?.substring(0, 100)}...</p>
-              <div className="event-meta">
-                <span>📅 {event.date?.split('T')[0]}</span>
-                <span>📍 {event.location || 'Место не указано'}</span>
+              <div className="event-card-image">
+                <div className="event-card-placeholder">🎉</div>
+              </div>
+              <div className="event-card-content">
+                <h3>{event.title}</h3>
+                <p className="event-description">{event.description?.substring(0, 100) || 'Описание отсутствует'}...</p>
+                <div className="event-meta">
+                  <span>📅 {event.date?.split('T')[0]}</span>
+                  <span>📍 {event.location || 'Место не указано'}</span>
+                </div>
               </div>
             </Link>
           ))}

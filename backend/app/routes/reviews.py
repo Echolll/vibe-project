@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from typing import List
 
@@ -30,6 +30,18 @@ def create_review(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Вы не можете поставить оценку самому себе."
         )
+        
+    existing_review = db.query(Reviews).filter(
+        Reviews.from_user_id == current_user.id,
+        Reviews.to_user_id == review_data.to_user_id,
+        Reviews.event_id == review_data.event_id
+    ).first()
+    
+    if existing_review:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Вы уже оставляли отзыв этому пользователю."
+        )
 
     db_review = Reviews(
         from_user_id=current_user.id,  # Берем из токена авторизации
@@ -51,7 +63,7 @@ def create_review(
     description="Возвращает массив всех когда-либо оставленных текстовых отзывов и оценок НА конкретного пользователя."
 )
 def get_user_reviews(user_id: int, db: Session = Depends(get_db)):
-    reviews = db.query(Reviews).filter(Reviews.to_user_id == user_id).all()
+    reviews = db.query(Reviews).options(joinedload(Reviews.from_user)).filter(Reviews.to_user_id == user_id).all()
     return reviews
 
 
